@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+
+import hid
+import time
+import os
+import sys
+
+VID = 0x1E7D
+PID = 0x2C8E
+
+CACHE_FILE = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}") + "/kone_battery_live.txt"
+
+
+def write_cache(text):
+    tmp = CACHE_FILE + ".tmp"
+
+    with open(tmp, "w") as f:
+        f.write(text + "\n")
+
+    os.replace(tmp, CACHE_FILE)
+
+
+def find_diagnostic_path():
+    for d in hid.enumerate(VID, PID):
+        if d["usage_page"] in (0xFF00, 0xFF01):
+            return d["path"]
+
+    return None
+
+
+def listen_loop():
+    last_status = None
+
+    print("Kone Daemon: Searching for mouse interface...")
+
+    while True:
+        path = find_diagnostic_path()
+
+        if not path:
+            time.sleep(2)
+            continue
+
+        try:
+            mouse = hid.device()
+            mouse.open_path(path)
+        except Exception as e:
+            msg = str(e).lower()
+            if "permission" in msg or "access" in msg:
+                print(
+                    f"Permission denied opening {path}. "
+                    "Install the udev rule from README.md (Permissions section).",
+                    file=sys.stderr,
+                )
+                time.sleep(10)
+            else:
+                print(f"Failed to open {path}: {e}", file=sys.stderr)
+                time.sleep(2)
+            continue
+
+        print("Kone Daemon: Connected")
+
+        try:
+            while True:
+                response = mouse.read(64, timeout_ms=500)
+
+                if not response:
+                    continue
+
+                if len(response) < 2:
+                    continue
+
+                if response[0] != 0x90:
+                    continue
+
+                sub_cmd = response[1]
+
+                status = None
+
+                # Battery level packet
+                if sub_cmd == 0x0A and len(response) >= 6:
+                    battery = response[5]
+
+                    if 0 <= battery <= 100:
+                        status = f"{battery}%"
+
+                # Charging state packet
+                elif sub_cmd == 0x07 and len(response) >= 7:
+                    if response[6] == 0x0D:
+                        status = "Charging"
+
+                if status and status != last_status:
+                    write_cache(status)
+                    last_status = status
+
+        except Exception as e:
+            print(f"Disconnected: {e}")
+
+            try:
+                mouse.close()
+            except Exception:
+                pass
+
+            time.sleep(1)
+
+
+if __name__ == "__main__":
+    listen_loop()

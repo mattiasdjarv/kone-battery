@@ -1,0 +1,12 @@
+[Unit]
+Description=Roccat Kone Pro Air battery monitor
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/kone-daemon
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

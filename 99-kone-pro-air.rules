@@ -1,0 +1,3 @@
+# Allow unprivileged access to the Roccat Kone Pro Air HID diagnostic interface
+# so that the user running kone-daemon (without root) can read battery packets.
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1e7d", ATTRS{idProduct}=="2c8e", TAG+="uaccess"
