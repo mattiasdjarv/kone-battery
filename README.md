@@ -2,7 +2,7 @@
 
 Battery monitor for the Roccat Kone Pro Air on Linux.
 
-I made this because nothing else worked for me. When in 2.4GHz wireless
+I couldn't find anything that worked so I made this script. When in 2.4GHz wireless
 mode, the mouse exposes battery and charging state over a vendor HID
 interface that `upower` does not read. `kone-daemon` listens to it and
 writes the latest value to a per-user cache file. The other scripts read
@@ -18,7 +18,7 @@ It works for me. That is about all I can promise.
 
 ## Install
 
-    git clone <this repo>
+    git clone https://github.com/mattiasdjarv/kone-battery.git
     cd kone-battery
     ./install.sh
 
@@ -107,10 +107,10 @@ Then unplug and replug the dongle.
 
 ## Compatibility
 
-I only have the Roccat Kone Pro Air, so I cannot promise anything else works.
+I only have the Roccat Kone Pro Air, so that is all I know this works with.
 The protocol is undocumented and the daemon matches on USB vendor/product IDs
 `1e7d:2c8e`; other mice in the Kone family might too. If you try one, open an
-issue and let me know. Battery level is reported in 10% increments.
+issue and let me know. Also, battery level is reported by the mouse in 10% increments.
 
 ## Troubleshooting
 
