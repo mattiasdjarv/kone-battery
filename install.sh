@@ -22,7 +22,7 @@ BINDIR="$PREFIX/bin"
 SERVICEDIR="$HOME/.config/systemd/user"
 UDEV_FILE="/etc/udev/rules.d/99-kone-pro-air.rules"
 
-SCRIPTS=(kone-daemon kone-cli kone-bar kone-notify)
+SCRIPTS=(kone-daemon kone-status kone-notify)
 
 # ── Flags ────────────────────────────────────────────────────────────────────
 
@@ -34,7 +34,7 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") [OPTIONS]
 
-Installs kone-daemon, kone-cli, kone-bar, and kone-notify to $BINDIR,
+Installs kone-daemon, kone-status, and kone-notify to $BINDIR,
 checks for the hidapi Python package, and optionally configures a systemd
 user service and udev rule.
 
@@ -318,4 +318,4 @@ printf "${BOLD}%-20s${RESET} %s\n" "udev rule" "$SUMMARY_UDEV"
 
 printf '\n'
 info "Turn the mouse off and on, or unplug and replug the dongle to"
-info "trigger the first battery packet. Then try:  kone-cli"
+  info "trigger the first battery packet. Then try:  kone-status"

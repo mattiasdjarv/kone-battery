@@ -10,7 +10,7 @@ BINDIR="$PREFIX/bin"
 SERVICEDIR="$HOME/.config/systemd/user"
 UDEV_FILE="/etc/udev/rules.d/99-kone-pro-air.rules"
 
-SCRIPTS=(kone-daemon kone-cli kone-bar kone-notify)
+SCRIPTS=(kone-daemon kone-status kone-notify)
 
 # ── Flags ─────────────────────────────────────────────────────────────────────
 

@@ -50,18 +50,17 @@ GNOME: drop a `.desktop` file into `~/.config/autostart/`.
 
 ## Scripts
 
-| Script        | Purpose                                         |
-| ------------- | ----------------------------------------------- |
-| `kone-daemon` | Background listener. Writes the cache file.     |
-| `kone-bar`    | Plain-text output for any status bar or script. |
-| `kone-cli`    | One-shot print of the current battery level.    |
-| `kone-notify` | Desktop notification on low battery / charging.  |
+| Script        | Purpose                                                                 |
+| ------------- | ----------------------------------------------------------------------- |
+| `kone-daemon` | Background listener. Writes the cache file.                             |
+| `kone-status` | Print the cached battery status, or `No data` if the daemon hasn't reported. Safe for status bars and one-shot CLI use. |
+| `kone-notify` | Desktop notification on low battery / charging.                        |
 
 ### Waybar
 
     "modules-right": ["custom/kone"],
     "custom/kone": {
-        "exec": "~/.local/bin/kone-bar",
+        "exec": "~/.local/bin/kone-status",
         "interval": 5
     }
 
@@ -69,24 +68,24 @@ GNOME: drop a `.desktop` file into `~/.config/autostart/`.
 
     [module/kone]
     type = custom/script
-    exec = ~/.local/bin/kone-bar
+    exec = ~/.local/bin/kone-status
     interval = 5
 
 ### i3blocks
 
     [kone]
-    command=~/.local/bin/kone-bar
+    command=~/.local/bin/kone-status
     interval=5
 
 ### tmux
 
-    set -g status-right '#(kone-bar) | %H:%M'
+    set -g status-right '#(kone-status) | %H:%M'
 
 ### Command line
 
-    $ kone-cli
+    $ kone-status
     40%
-    # Exits non-zero if the daemon has not reported yet.
+    # Prints 'No data' if the daemon has not reported yet.
 
 ### Low-battery notification
 
@@ -114,7 +113,7 @@ issue and let me know. Also, battery level is reported by the mouse in 10% incre
 
 ## Troubleshooting
 
-If `kone-cli` says `No data`:
+If `kone-status` says `No data`:
 
 - The mouse sends a battery packet when it reconnects or wakes from standby. Unplug the dongle and replug it, or turn the mouse off and on.
 - Check it is running: `pgrep -fl kone-daemon` or `systemctl --user status kone-daemon`

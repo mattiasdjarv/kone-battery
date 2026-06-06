@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+"""Print the cached Kone Pro Air battery status.
+
+Reads the file written by kone-daemon. If the daemon has not reported yet
+(or the cache is empty/unreadable), prints 'No data'. Always exits 0 so it
+is safe to use in status bars and other polled consumers."""
+
+import os
+import sys
+
+CACHE_FILE = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}") + "/kone_battery_live.txt"
+
+
+def main():
+    try:
+        with open(CACHE_FILE) as f:
+            status = f.read().strip()
+    except OSError:
+        status = ""
+    print(status or "No data")
+
+
+if __name__ == "__main__":
+    main()
