@@ -53,7 +53,7 @@ GNOME: drop a `.desktop` file into `~/.config/autostart/`.
 | Script        | Purpose                                                                 |
 | ------------- | ----------------------------------------------------------------------- |
 | `kone-daemon` | Background listener. Writes the cache file.                             |
-| `kone-status` | Print the cached battery status, or `No data` if the daemon hasn't reported. Safe for status bars and one-shot CLI use. |
+| `kone-status` | Print the cached battery status, or `No data` if the daemon hasn't reported. Works with status bars and one-shot CLI use. |
 | `kone-notify` | Desktop notification on low battery / charging.                        |
 
 ### Waybar
